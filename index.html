@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rubi - My Forever 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ruby-red: #9b111e;
+            --ruby-light: #ff4d6d;
+            --gold: #d4af37;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at center, #1a0505 0%, #050000 100%);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .premium-card {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 550px;
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 40px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                        inset 0 0 20px rgba(155, 17, 30, 0.2);
+            text-align: center;
+            transition: all 0.5s ease;
+            margin: 20px 0;
+        }
+
+        .rubi-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 5rem;
+            background: linear-gradient(to bottom, #fff 20%, var(--ruby-light) 60%, var(--ruby-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(255, 77, 109, 0.4));
+            margin: 0.5rem 0;
+        }
+
+        .gold-border {
+            height: 2px;
+            width: 80px;
+            background: var(--gold);
+            margin: 1.5rem auto;
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, var(--ruby-red) 0%, #600000 100%);
+            border: 1px solid var(--gold);
+            padding: 1.2rem 2.5rem;
+            border-radius: 100px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3), 0 0 15px rgba(155, 17, 30, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        .shayari-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 1.5s ease-in-out;
+            text-align: left;
+        }
+
+        .shayari-container.active {
+            max-height: 2000px;
+        }
+
+        .shayari-item {
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 3px solid var(--gold);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 20px 20px 0;
+            animation: slideIn 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .heart-float {
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
+            filter: drop-shadow(0 0 5px rgba(255, 77, 109, 0.8));
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+        }
+
+        @media (max-width: 480px) {
+            .rubi-title { font-size: 3.5rem; }
+            .premium-card { padding: 1.5rem; width: 95%; }
+            .shayari-item { padding: 1rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="premium-card" id="mainCard">
+        <div class="text-xs uppercase tracking-[0.4em] text-gold-400 mb-2" style="color: var(--gold)">Happy New Year 2026</div>
+        <h1 class="text-2xl font-light tracking-tight">For My Precious</h1>
+        <div class="rubi-title">Rubi</div>
+        <div class="gold-border"></div>
+        
+        <p class="text-gray-300 leading-relaxed font-light italic mb-8" id="introText">
+            "Kyonki mere liye naya saal sirf ek tareekh nahi, tumhare saath bitaya har lamha ek naya jashn hai."
+        </p>
+
+        <button onclick="revealEverything()" class="action-btn text-white uppercase text-xs" id="unlockBtn">
+            Humari Yaadein aur Agla Saal ✨
+        </button>
+
+        <div id="shayariBox" class="shayari-container mt-6">
+            
+            <div class="shayari-item" style="animation-delay: 0.2s;">
+                <p class="text-ruby-light font-bold mb-2">💎 Anmol Rubi</p>
+                <p class="italic text-gray-200">"कहने को तो 'रूबी' एक कीमती पत्थर है इस जहाँ में, मगर मेरी ज़िन्दगी में तुम एक अनमोल एहसास हो। ये नया साल तो बस एक बहाना है बताने का, कि तुम कल भी खास थी और हमेशा खास रहोगी।"</p>
+            </div>
+
+            <div class="shayari-item" style="animation-delay: 0.5s;">
+                <p class="text-ruby-light font-bold mb-2">🌟 Nayi Shuruat</p>
+                <p class="italic text-gray-200">"बीता साल जैसा भी था, अब उसे भूल जाते हैं, चलो मोहब्बत की एक नई दुनिया बसाते हैं। मेरी दुआ है कि 2026 का हर लम्हा तुम्हारे लिए, वैसा ही खूबसूरत हो जैसी तुम्हारी मुस्कुराहट है।"</p>
+            </div>
+
+            <div class="shayari-item" style="animation-delay: 0.8s;">
+                <p class="text-ruby-light font-bold mb-2">🤝 Hamesha Ka Wada</p>
+                <p class="italic text-gray-200">"नया साल आएगा, नयी उम्मीदें जगाएगा, मगर मेरा हाथ तुम्हारे हाथ में हमेशा रहेगा। साल बदलेंगे, तारीखें बदलेंगी, मौसम बदलेंगे, बस एक मेरी मोहब्बत है जो कभी नहीं बदलेगी।"</p>
+            </div>
+
+            <div class="shayari-item" style="animation-delay: 1.1s;">
+                <p class="text-ruby-light font-bold mb-2">🌹 Dil Se Dua</p>
+                <p class="italic text-gray-200">"तुम्हारी आँखों में खुशी, और चेहरे पर नूर रहे, हर गम इस नए साल में तुमसे कोसों दूर रहे। खुदा करे ये साल तुम्हारे लिए इतना हसीन हो, कि तुम जिसे भी छुओ, वो 'रूबी' सा रंगीन हो।"</p>
+            </div>
+
+            <div class="shayari-item" style="animation-delay: 1.4s;">
+                <p class="text-ruby-light font-bold mb-2">❤️ Bas Tum</p>
+                <p class="italic text-gray-200">"मुबारक हो तुम्हें नया साल ए-मेरी रूबी, मेरी ज़िन्दगी की तुम सबसे खूबसूरत खूबी हो।"</p>
+            </div>
+
+            <div class="text-center mt-8 pb-4">
+                <p class="rubi-text text-2xl text-pink-400">I Love You Forever! ❤️</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let audioStarted = false;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.size = Math.random() * 2 + 1;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 8,
+                    y: (Math.random() - 0.5) * 8
+                };
+                this.alpha = 1;
+                this.decay = Math.random() * 0.015 + 0.01;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+            update() {
+                this.velocity.y += 0.05; 
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= this.decay;
+            }
+        }
+
+        function spawnFirework(x, y) {
+            const colors = ['#d4af37', '#ff4d6d', '#9b111e', '#ffffff', '#ffd700'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            for (let i = 0; i < 60; i++) {
+                particles.push(new Particle(x, y, color));
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(5, 0, 0, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            particles = particles.filter(p => p.alpha > 0);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            if (Math.random() < 0.025) {
+                spawnFirework(Math.random() * canvas.width, Math.random() * canvas.height * 0.6);
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.className = 'heart-float';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.bottom = '-50px';
+            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            heart.style.animation = `float-up ${Math.random() * 3 + 4}s linear forwards`;
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 7000);
+        }
+
+        // Happy New Year Tune Generator (Since we can't load external MP3 easily, we synthesize it)
+        function playHappyNewYearMelody() {
+            if(audioStarted) return;
+            audioStarted = true;
+            
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const notes = [
+                {f: 261.63, d: 0.4}, {f: 261.63, d: 0.2}, {f: 293.66, d: 0.6}, {f: 261.63, d: 0.6}, {f: 349.23, d: 0.6}, {f: 329.63, d: 1.2},
+                {f: 261.63, d: 0.4}, {f: 261.63, d: 0.2}, {f: 293.66, d: 0.6}, {f: 261.63, d: 0.6}, {f: 392.00, d: 0.6}, {f: 349.23, d: 1.2}
+            ];
+
+            let time = audioCtx.currentTime;
+            
+            function playNote(freq, duration) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, time);
+                gain.gain.setValueAtTime(0.1, time);
+                gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(time);
+                osc.stop(time + duration);
+                time += duration;
+            }
+
+            // Loop melody
+            setInterval(() => {
+                time = audioCtx.currentTime;
+                notes.forEach(n => playNote(n.f, n.d));
+            }, 8000);
+            
+            notes.forEach(n => playNote(n.f, n.d));
+        }
+
+        function revealEverything() {
+            const btn = document.getElementById('unlockBtn');
+            const shayariBox = document.getElementById('shayariBox');
+            const intro = document.getElementById('introText');
+            const card = document.getElementById('mainCard');
+            
+            btn.style.display = 'none';
+            intro.style.display = 'none';
+            shayariBox.classList.add('active');
+            
+            playHappyNewYearMelody();
+            
+            card.style.maxWidth = "600px";
+
+            for(let i=0; i<10; i++) {
+                setTimeout(() => {
+                    spawnFirework(
+                        Math.random() * window.innerWidth, 
+                        Math.random() * window.innerHeight * 0.5
+                    );
+                }, i * 200);
+            }
+
+            setInterval(createFloatingHeart, 400);
+        }
+
+        document.addEventListener('mousedown', (e) => {
+            spawnFirework(e.clientX, e.clientY);
+        });
+        document.addEventListener('touchstart', (e) => {
+            spawnFirework(e.touches[0].clientX, e.touches[0].clientY);
+        });
+    </script>
+</body>
+</html>
